@@ -24,21 +24,21 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Android SDK tools
+      - name: Install Android Build Tools
         run: |
-          sdkmanager "build-tools;35.0.0"
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
-      - name: Build APK
+      - name: Find project and build
         run: |
-          cd mine_project
+          PROJECT_DIR="$(dirname "$(find mine_project -name gradlew -type f | head -n 1)")"
+          echo "Project directory: $PROJECT_DIR"
+          cd "$PROJECT_DIR"
           chmod +x gradlew
-          ./gradlew assembleDebug \
-            -Dandroid.aapt2FromMavenOverride="" \
-            --stacktrace
+          ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: MINE-debug-apk
-          path: mine_project/app/build/outputs/apk/debug/*.apk
+          path: mine_project/**/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
