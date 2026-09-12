@@ -8,16 +8,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download ZIP
+      - name: Download project
         uses: actions/checkout@v4
 
       - name: Extract MINE project
         run: |
           unzip -q MINEai.zip -d mine_project
-          find mine_project -maxdepth 3 -name gradlew -type f
 
       - name: Set up Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
@@ -26,10 +25,10 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Build APK
-  run: |
-    cd mine_project
-    chmod +x gradlew
-    ./gradlew assembleDebug
+        run: |
+          cd mine_project
+          chmod +x gradlew
+          ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
