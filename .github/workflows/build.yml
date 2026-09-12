@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download project
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Extract MINE project
@@ -24,14 +24,21 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Install Android SDK tools
+        run: |
+          sdkmanager "build-tools;35.0.0"
+
       - name: Build APK
         run: |
           cd mine_project
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug \
+            -Dandroid.aapt2FromMavenOverride="" \
+            --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: MINE-debug-apk
           path: mine_project/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
