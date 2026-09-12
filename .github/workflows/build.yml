@@ -26,13 +26,13 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Build APK
-        run: |
-          cd mine_project/MINEai
-          chmod +x gradlew
-          ./gradlew assembleDebug
+  run: |
+    cd mine_project
+    chmod +x gradlew
+    ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: MINE-debug-apk
-          path: mine_project/MINEai/app/build/outputs/apk/debug/*.apk
+          path: mine_project/app/build/outputs/apk/debug/*.apk
